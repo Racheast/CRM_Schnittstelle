@@ -1,0 +1,24 @@
+2017-08-31 12:30:29.930  WARN 10792 --- [main] ory$DuplicateJsonObjectContextCustomizer : 
+
+Found multiple occurrences of org.json.JSONObject on the class path:
+
+	jar:file:/C:/Users/alexander.eigner/.m2/repository/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar!/org/json/JSONObject.class
+	jar:file:/C:/Users/alexander.eigner/.m2/repository/org/json/json/20170516/json-20170516.jar!/org/json/JSONObject.class
+
+You may wish to exclude one of them to ensure predictable runtime behaviour
+
+2017-08-31 12:30:29.968  INFO 10792 --- [main] .d.MailChimpRestClient_KundenUpdateTests : Starting MailChimpRestClient_KundenUpdateTests on GMMPC12 with PID 10792 (started by alexander.eigner in C:\Users\alexander.eigner\eclipse-workspace\MailChimpRestClient_KundenUpdate)
+2017-08-31 12:30:29.969  INFO 10792 --- [main] .d.MailChimpRestClient_KundenUpdateTests : No active profile set, falling back to default profiles: default
+2017-08-31 12:30:30.036  INFO 10792 --- [main] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@696da30b: startup date [Thu Aug 31 12:30:30 CEST 2017]; root of context hierarchy
+2017-08-31 12:30:31.397  INFO 10792 --- [main] f.a.AutowiredAnnotationBeanPostProcessor : JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+2017-08-31 12:30:31.657  INFO 10792 --- [main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$3f175022] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2017-08-31 12:30:31.740  INFO 10792 --- [main] .w.s.a.s.AnnotationActionEndpointMapping : Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2017-08-31 12:30:31.771  WARN 10792 --- [main] f.a.AutowiredAnnotationBeanPostProcessor : Autowired annotation is not supported on static methods: public static void com.example.demo.MailChimpRestClient_KundenUpdate.main(java.lang.String[]) throws org.json.JSONException
+2017-08-31 12:30:32.622  INFO 10792 --- [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : Looking for @ControllerAdvice: org.springframework.web.context.support.GenericWebApplicationContext@696da30b: startup date [Thu Aug 31 12:30:30 CEST 2017]; root of context hierarchy
+2017-08-31 12:30:32.757  INFO 10792 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+2017-08-31 12:30:32.769  INFO 10792 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+2017-08-31 12:30:32.827  INFO 10792 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2017-08-31 12:30:32.849  INFO 10792 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2017-08-31 12:30:32.904  INFO 10792 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2017-08-31 12:30:33.223  INFO 10792 --- [main] .d.MailChimpRestClient_KundenUpdateTests : Started MailChimpRestClient_KundenUpdateTests in 3.692 seconds (JVM running for 4.685)
+2017-08-31 12:30:33.296  INFO 10792 --- [Thread-2] o.s.w.c.s.GenericWebApplicationContext   : Closing org.springframework.web.context.support.GenericWebApplicationContext@696da30b: startup date [Thu Aug 31 12:30:30 CEST 2017]; root of context hierarchy
