@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+
 import config.Config;
 import dto.MemberDto;
 import dto.SegmentDto;
@@ -26,8 +28,8 @@ import service.FileLoaderService;
 import service.RestService;
 
 
-
-@SpringBootApplication
+//@ComponentScan({"controllers"})
+@SpringBootApplication(scanBasePackages={"controllers", "service"})
 public class MailChimpRestProxy {
 	private static Logger logger;
 	private static Timer timer;
@@ -41,7 +43,9 @@ public class MailChimpRestProxy {
 	@Autowired
 	public static void main(String[] args) throws JSONException {
 		logger = Logger.getLogger(MailChimpRestProxy.class);
-		logger.info("Starting MailChimpRestClient ...");
+		logger.info("Starting MailChimpRestProxy ...");
+		ConfigurableApplicationContext context = SpringApplication.run(MailChimpRestProxy.class, args);
+		/*
 		timer = new Timer();
 		errors = new ArrayList<String>();
 		
@@ -108,6 +112,7 @@ public class MailChimpRestProxy {
 		
 		context.stop();
 		SpringApplication.exit(context);
+		*/
 	}
 	
 	/*
