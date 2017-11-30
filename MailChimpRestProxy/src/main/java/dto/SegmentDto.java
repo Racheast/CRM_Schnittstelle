@@ -6,6 +6,10 @@ public class SegmentDto {
 	private String name;
 	private String[] static_segment;
 	
+	public SegmentDto() {
+		
+	}
+	
 	public String getName() {
 		return name;
 	}

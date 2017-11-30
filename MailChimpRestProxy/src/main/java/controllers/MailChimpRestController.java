@@ -2,6 +2,7 @@ package controllers;
 import java.net.URISyntaxException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +21,11 @@ public class MailChimpRestController {
 	RestService restService;
 	
 	@CrossOrigin(origins = "http://localhost:4848")
-	@RequestMapping(value="/createSegment",method=RequestMethod.GET)
+	@RequestMapping(value="/createSegment",method=RequestMethod.POST,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String createSegment( @RequestParam String vApiPrefix, @RequestParam String baseURL, @RequestParam String vMCKey, @RequestParam String vMCList, @RequestBody SegmentDto segment) throws URISyntaxException {
 		Config config = new Config(baseURL,vMCKey,vApiPrefix,vMCList);
 		System.out.println("createSegment called!");
+		System.out.println("segment received: " + segment.toString());
 		return config.toString();
 		//return restService.createSegment(config,segment).getBody().getAsNumber("id").intValue();
 	}

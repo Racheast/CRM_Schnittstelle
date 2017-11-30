@@ -44,7 +44,8 @@ public class Config {
 	}
 	
 	public String generateURL() {
-		return "https://" + vApiPrefix + ".api.mailchimp.com/3.0/";
+		//return "https://" + vApiPrefix + ".api.mailchimp.com/3.0/";
+		return "https://" + vApiPrefix + this.base_url;
 	}
 	
 	public void setBase_url(String base_url) {
