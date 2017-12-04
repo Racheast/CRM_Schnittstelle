@@ -38,9 +38,9 @@ public class MailChimpRestController {
 	public ResponseEntity<JSONObject> addOrRemoveMembersFromSegment(@RequestParam String vApiPrefix, @RequestParam String baseURL, @RequestParam String vMCKey, @RequestParam String vMCList, @RequestParam String segment_id, @RequestBody MembersToAddAndRemoveDto membersToAddAndRemove) throws URISyntaxException{
 		Config config = new Config(baseURL,vMCKey,vApiPrefix,vMCList);
 		System.out.println("addOrRemoveMembersFromSegment() called!");
-		System.out.println("Is Integer: " + segment_id + "? " + isInteger(segment_id));
+
 		if(isInteger(segment_id)) {
-			return restService.addOrRemoveMembersFromSegment(config, membersToAddAndRemove.getMembers_to_add(), membersToAddAndRemove.getMembers_to_remove(), Integer.parseInt(segment_id));
+			return restService.addOrRemoveMembersFromSegment(config, membersToAddAndRemove.getMembers_to_add(), new String[0], Integer.parseInt(segment_id));
 		}else {
 			//ResponseEntity<JSONObject> response = new ResponseEntity<JSONObject>(HttpStatus.BAD_REQUEST);
 			//return response;

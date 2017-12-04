@@ -24,6 +24,9 @@ import dto.MemberDto;
 import dto.SegmentDto;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
+
 import org.springframework.stereotype.Service;
 
 
@@ -126,12 +129,12 @@ public class RestService {
 		
 		HttpHeaders headers = getHttpHeaders(config);
 		RestTemplate template = (new RestTemplateBuilder()).build();
-		
+		//String requestURL = "https://us13.api.mailchimp.com/3.0/lists/8af007a903/segments/601469";
 		String requestURL = config.generateURL() + "lists/" + config.getvMCList() + "/segments/" + segment_id;
 		JSONObject body = new JSONObject();
-		body.put("members_to_add", members_to_add);
-		System.out.println("Members_to_add: " + members_to_add);
-		System.out.println("Members_to_add: " + members_to_remove);
+		String[] arr = new String[] {"dr.bannert@hotmail.de"};
+		
+		body.put("members_to_add", arr);
 		body.put("members_to_remove", members_to_remove);
 		RequestEntity<JSONObject> request = new RequestEntity<JSONObject>(body,headers,HttpMethod.POST,new URI(requestURL));
 		logger.info("addOrRemoveMembersFromSegment: " + request.getMethod() + " " + request.getUrl().toString());
