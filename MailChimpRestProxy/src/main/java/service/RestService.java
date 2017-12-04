@@ -130,6 +130,8 @@ public class RestService {
 		String requestURL = config.generateURL() + "lists/" + config.getvMCList() + "/segments/" + segment_id;
 		JSONObject body = new JSONObject();
 		body.put("members_to_add", members_to_add);
+		System.out.println("Members_to_add: " + members_to_add);
+		System.out.println("Members_to_add: " + members_to_remove);
 		body.put("members_to_remove", members_to_remove);
 		RequestEntity<JSONObject> request = new RequestEntity<JSONObject>(body,headers,HttpMethod.POST,new URI(requestURL));
 		logger.info("addOrRemoveMembersFromSegment: " + request.getMethod() + " " + request.getUrl().toString());
