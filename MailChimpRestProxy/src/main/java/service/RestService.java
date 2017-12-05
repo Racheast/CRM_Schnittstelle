@@ -50,8 +50,8 @@ public class RestService {
 		return sb.toString();
 	}
 	
-	public ResponseEntity<JSONObject> addOrUpdateListMembers(Config config, ArrayList<MemberDto> members_to_add) throws URISyntaxException, NoSuchAlgorithmException, JsonProcessingException{
-		logger.info("addOrUpdateListMembers: Adding " + members_to_add.size() + " members ...");
+	public ResponseEntity<JSONObject> addOrUpdateListMembers(Config config, MemberDto[] members) throws URISyntaxException, NoSuchAlgorithmException, JsonProcessingException{
+		logger.info("addOrUpdateListMembers: Adding " + members.length + " members ...");
 		
 		HttpHeaders headers = getHttpHeaders(config);
 		RestTemplate template = (new RestTemplateBuilder()).build();
@@ -59,7 +59,7 @@ public class RestService {
 		String requestURL = config.generateURL() + "batches"; //POST
 		ObjectMapper mapper = new ObjectMapper();
 		JSONArray  operations = new JSONArray();
-		for(MemberDto member: members_to_add) {	
+		for(MemberDto member: members) {	
 			JSONObject operation = new JSONObject();
 			String subscriber_hash = getMD5Hash(member.getEmail_address().toLowerCase());
 			String operation_path = "lists/" + config.getvMCList() + "/members/" + subscriber_hash;
@@ -69,8 +69,7 @@ public class RestService {
 			operation.put("body", mapper.writeValueAsString(member));
 			operations.add(operation);
 		}
-		
-		
+				
 		JSONObject batch = new JSONObject();
 		batch.put("operations", operations);
 				
@@ -115,7 +114,6 @@ public class RestService {
 		
 		HttpHeaders headers = getHttpHeaders(config);
 		RestTemplate template = (new RestTemplateBuilder()).build();
-		
 		String requestURL = config.generateURL() + "lists/" + config.getvMCList() + "/segments";
 		RequestEntity<SegmentDto> request = new RequestEntity<SegmentDto>(segment,headers,HttpMethod.POST,new URI(requestURL));
 		logger.info("createSegment: " + request.getMethod() + " " + request.getUrl().toString());
@@ -129,12 +127,9 @@ public class RestService {
 		
 		HttpHeaders headers = getHttpHeaders(config);
 		RestTemplate template = (new RestTemplateBuilder()).build();
-		//String requestURL = "https://us13.api.mailchimp.com/3.0/lists/8af007a903/segments/601469";
 		String requestURL = config.generateURL() + "lists/" + config.getvMCList() + "/segments/" + segment_id;
 		JSONObject body = new JSONObject();
-		String[] arr = new String[] {"dr.bannert@hotmail.de"};
-		
-		body.put("members_to_add", arr);
+		body.put("members_to_add", members_to_add);
 		body.put("members_to_remove", members_to_remove);
 		RequestEntity<JSONObject> request = new RequestEntity<JSONObject>(body,headers,HttpMethod.POST,new URI(requestURL));
 		logger.info("addOrRemoveMembersFromSegment: " + request.getMethod() + " " + request.getUrl().toString());

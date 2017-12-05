@@ -10,8 +10,13 @@ public class MemberDto {
 	private Map<String, Object> merge_fields;
 	private SubscriptionStatus status_if_new;  
 	//private SubscriptionStatus status;
-	private Map<String, Double> location;
+	//private Map<String, Double> location;
 	
+	public MemberDto() {
+	
+	}
+	
+	/*
 	public MemberDto() {
 		this.email_address = null;
 		this.status_if_new = null;
@@ -23,6 +28,7 @@ public class MemberDto {
 		this.location.put("longitude", null);
 	}
 	
+	*/
 	public String getEmail_address() {
 		return email_address;
 	}
@@ -41,7 +47,7 @@ public class MemberDto {
 	public void setMerge_fields(Map<String, Object> merge_fields) {
 		this.merge_fields = merge_fields;
 	}
-
+	/*
 	public Map<String, Double> getLocation() {
 		return location;
 	}
@@ -55,6 +61,6 @@ public class MemberDto {
 		return "MemberDto [email_address=" + email_address + ", merge_fields=" + merge_fields + ", status_if_new="
 				+ status_if_new + ", location=" + location + "]";
 	}
-		
+	*/	
 	
 }
