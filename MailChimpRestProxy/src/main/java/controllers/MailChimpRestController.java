@@ -28,14 +28,14 @@ public class MailChimpRestController {
 	
 	//@CrossOrigin(origins = "http://localhost:4848")
 	@RequestMapping(value="/createSegment", method=RequestMethod.POST/*,produces = MediaType.APPLICATION_JSON_UTF8_VALUE*/)
-	public ResponseEntity<JSONObject> createSegment( @RequestParam String vApiPrefix, @RequestParam String baseURL, @RequestParam String vMCKey, @RequestParam String vMCList, @RequestBody SegmentDto segment) throws URISyntaxException {
+	public JSONObject createSegment( @RequestParam String vApiPrefix, @RequestParam String baseURL, @RequestParam String vMCKey, @RequestParam String vMCList, @RequestBody SegmentDto segment) throws URISyntaxException {
 		Config config = new Config(baseURL,vMCKey,vApiPrefix,vMCList);
 		return restService.createSegment(config,segment);
 	}
 	
 	//@CrossOrigin(origins = "http://localhost:4848")
 	@RequestMapping(value="/addOrRemoveMembersFromSegment", method=RequestMethod.POST)
-	public ResponseEntity<JSONObject> addOrRemoveMembersFromSegment(@RequestParam String vApiPrefix, @RequestParam String baseURL, @RequestParam String vMCKey, @RequestParam String vMCList, @RequestParam String segment_id, @RequestBody MembersToAddAndRemoveDto membersToAddAndRemove) throws URISyntaxException{
+	public JSONObject addOrRemoveMembersFromSegment(@RequestParam String vApiPrefix, @RequestParam String baseURL, @RequestParam String vMCKey, @RequestParam String vMCList, @RequestParam String segment_id, @RequestBody MembersToAddAndRemoveDto membersToAddAndRemove) throws URISyntaxException{
 		Config config = new Config(baseURL,vMCKey,vApiPrefix,vMCList);
 
 		if(isInteger(segment_id)) {
@@ -43,27 +43,28 @@ public class MailChimpRestController {
 		}else {
 			JSONObject error = new JSONObject();
 			error.put("Error", "The parameter segment_id could not be parsed to an integer. Check whether segment_id represents an integer value.");
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+			return new JSONObject();
+			//return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 		}
 	}
 	
 	//@CrossOrigin(origins = "http://localhost:4848")
 	@RequestMapping(value="/addOrUpdateListMembers", method=RequestMethod.POST)
-	public ResponseEntity<JSONObject> addOrUpdateListMembers(@RequestParam String vApiPrefix, @RequestParam String baseURL, @RequestParam String vMCKey, @RequestParam String vMCList, @RequestBody MemberDto[] members) throws NoSuchAlgorithmException, JsonProcessingException, URISyntaxException{
+	public JSONObject addOrUpdateListMembers(@RequestParam String vApiPrefix, @RequestParam String baseURL, @RequestParam String vMCKey, @RequestParam String vMCList, @RequestBody MemberDto[] members) throws NoSuchAlgorithmException, JsonProcessingException, URISyntaxException{
 		Config config = new Config(baseURL,vMCKey,vApiPrefix,vMCList);
 		return restService.addOrUpdateListMembers(config, members);
 	}
 	
 	//@CrossOrigin(origins = "http://localhost:4848")
 	@RequestMapping(value="/getBatch", method=RequestMethod.GET)
-	public ResponseEntity<JSONObject> getBatch(@RequestParam String vApiPrefix, @RequestParam String baseURL, @RequestParam String vMCKey, @RequestParam String vMCList, @RequestParam String batch_id) throws NoSuchAlgorithmException, JsonProcessingException, URISyntaxException{
+	public JSONObject getBatch(@RequestParam String vApiPrefix, @RequestParam String baseURL, @RequestParam String vMCKey, @RequestParam String vMCList, @RequestParam String batch_id) throws NoSuchAlgorithmException, JsonProcessingException, URISyntaxException{
 		Config config = new Config(baseURL,vMCKey,vApiPrefix,vMCList);
 		return restService.getBatch(config, batch_id);
 	}
 	
 	//@CrossOrigin(origins = "http://localhost:4848")
 	@RequestMapping(value="/getMemberFromList", method=RequestMethod.GET)
-	public ResponseEntity<JSONObject> getMemberFromList(@RequestParam String vApiPrefix, @RequestParam String baseURL, @RequestParam String vMCKey, @RequestParam String vMCList, @RequestParam String email_address) throws NoSuchAlgorithmException, JsonProcessingException, URISyntaxException{
+	public JSONObject getMemberFromList(@RequestParam String vApiPrefix, @RequestParam String baseURL, @RequestParam String vMCKey, @RequestParam String vMCList, @RequestParam String email_address) throws NoSuchAlgorithmException, JsonProcessingException, URISyntaxException{
 		Config config = new Config(baseURL,vMCKey,vApiPrefix,vMCList);
 		return restService.getMemberFromList(config, email_address);
 	}

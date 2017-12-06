@@ -50,7 +50,7 @@ public class RestService {
 		return sb.toString();
 	}
 	
-	public ResponseEntity<JSONObject> addOrUpdateListMembers(Config config, MemberDto[] members) throws URISyntaxException, NoSuchAlgorithmException, JsonProcessingException{
+	public JSONObject addOrUpdateListMembers(Config config, MemberDto[] members) throws URISyntaxException, NoSuchAlgorithmException, JsonProcessingException{
 		logger.info("addOrUpdateListMembers: Adding " + members.length + " members ...");
 		
 		HttpHeaders headers = getHttpHeaders(config);
@@ -77,10 +77,10 @@ public class RestService {
 		logger.info("addOrUpdateListMembers: " + request.getMethod() + " " + request.getUrl().toString());
 		ResponseEntity<JSONObject> response = template.exchange(request, JSONObject.class); 
 		logger.info("addOrUpdateListMembers: " + request.getMethod() + " completed. Response status = " + response.getStatusCodeValue());
-		return response;
+		return response.getBody();
 	}
 	
-	public ResponseEntity<JSONObject> getMemberFromList(Config config, String email_address) throws NoSuchAlgorithmException, URISyntaxException {
+	public JSONObject getMemberFromList(Config config, String email_address) throws NoSuchAlgorithmException, URISyntaxException {
 		logger.info("getMemberFromList: Getting member " + email_address + " ...");
 		
 		HttpHeaders headers = getHttpHeaders(config);
@@ -92,10 +92,10 @@ public class RestService {
 		logger.info("getMemberFromList: " + request.getMethod() + " " + request.getUrl().toString());
 		ResponseEntity<JSONObject> response = template.exchange(request, JSONObject.class);
 		logger.info("getMemberFromList: " + request.getMethod() + " completed. Response status = " + response.getStatusCodeValue());
-		return response;
+		return response.getBody();
 	}
 	
-	public ResponseEntity<JSONObject> getBatch(Config config, String id) throws URISyntaxException {
+	public JSONObject getBatch(Config config, String id) throws URISyntaxException {
 		logger.info("getBatch: Getting batch with id " + id + " ...");
 		
 		HttpHeaders headers = getHttpHeaders(config);
@@ -106,10 +106,10 @@ public class RestService {
 		logger.info("getBatch: " + request.getMethod() + " " + request.getUrl().toString());
 		ResponseEntity<JSONObject> response = template.exchange(request, JSONObject.class);
 		logger.info("getBatch: " + request.getMethod() + " completed. Response status = " + response.getStatusCodeValue());
-		return response;
+		return response.getBody();
 	}
 	
-	public ResponseEntity<JSONObject> createSegment(Config config, SegmentDto segment) throws URISyntaxException{
+	public JSONObject createSegment(Config config, SegmentDto segment) throws URISyntaxException{
 		logger.info("createSegment: Creating a segment with the group name \"" + segment.getName() + "\" ...");
 		
 		HttpHeaders headers = getHttpHeaders(config);
@@ -119,10 +119,10 @@ public class RestService {
 		logger.info("createSegment: " + request.getMethod() + " " + request.getUrl().toString());
 		ResponseEntity<JSONObject> response = template.exchange(request, JSONObject.class);
 		logger.info("createSegment: " + request.getMethod() + " completed. Response status = " + response.getStatusCodeValue());
-		return response;
+		return response.getBody();
 	}
 	 
-	public ResponseEntity<JSONObject> addOrRemoveMembersFromSegment(Config config, String[] members_to_add, String[] members_to_remove, int segment_id) throws URISyntaxException{
+	public JSONObject addOrRemoveMembersFromSegment(Config config, String[] members_to_add, String[] members_to_remove, int segment_id) throws URISyntaxException{
 		logger.info("addOrRemoveMembersFromSegment: Adding " + members_to_add.length + " and removing " + members_to_remove.length + " members from segment " + segment_id);
 		
 		HttpHeaders headers = getHttpHeaders(config);
@@ -135,7 +135,7 @@ public class RestService {
 		logger.info("addOrRemoveMembersFromSegment: " + request.getMethod() + " " + request.getUrl().toString());
 		ResponseEntity<JSONObject> response = template.exchange(request, JSONObject.class);
 		logger.info("addOrRemoveMembersFromSegment: " + request.getMethod() + " completed. Response status = " + response.getStatusCodeValue());
-		return response;
+		return response.getBody();
 	}
 	
 	private HttpHeaders getHttpHeaders(Config config) {
