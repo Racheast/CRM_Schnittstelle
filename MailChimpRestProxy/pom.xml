@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.example</groupId>
-	<artifactId>MailChimpRestClient</artifactId>
+	<artifactId>MailChimpRestProxy</artifactId>
 	<version>1</version>
 	<packaging>jar</packaging>
 
-	<name>MailChimpRestClient</name>
+	<name>MailChimpRestProxy</name>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -95,5 +95,5 @@
 	</build>
 
 
-	<description>A rest client for MailChimp.</description>
+	<description>A rest proxy for MailChimp.</description>
 </project>

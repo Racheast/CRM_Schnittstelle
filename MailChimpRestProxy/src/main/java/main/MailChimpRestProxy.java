@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +52,8 @@ public class MailChimpRestProxy {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 try {
-                	String filepath = "." + File.separator + "csv-test" + File.separator + "corstest.csv";
+                	String filepath = "." + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator +  "corstest.csv";
+                	//String filepath = "." + File.separator + "corstest.csv";
                 	CSVReader reader = new CSVReader(new FileReader(filepath));
                 	List<String[]> lines = reader.readAll();
         			reader.close();
