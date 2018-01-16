@@ -39,94 +39,55 @@ public class SAMService {
 	public SAMService() throws IOException {
 		this.logger = Logger.getLogger(SAMService.class);
 	}
-	
-	public SOAPMessage createOrUpdateTarget(String soapEndpointURL, String username, String password, CampaignTargetDto campaignTargetDto) throws UnsupportedOperationException, SOAPException, IOException {
-		System.out.println("SAMService: craeteOrUpdateTarget() called 2");
-		logger.info("Calling createOrUpdateTarget() by user " + username + " for CampaignTarget " + campaignTargetDto.getCode() + " ...");
+
+	public SOAPMessage createOrUpdateTarget(String soapEndpointURL, String username, String password,
+			CampaignTargetDto campaignTargetDto) throws UnsupportedOperationException, SOAPException, IOException {
+		logger.info("Calling createOrUpdateTarget() by user " + username + " for CampaignTarget "
+				+ campaignTargetDto.getCode() + " ...");
 		SOAPConnection soapConnection = SOAPConnectionFactory.newInstance().createConnection();
 		SOAPMessage soapRequest = getSOAPMessage_createOrUpdateTarget(username, password, campaignTargetDto);
 		SOAPMessage soapResponse = soapConnection.call(soapRequest, soapEndpointURL);
-		
-		System.out.println("SOAP Respone Msg: \n" + getSOAPMessageAsString(soapResponse));
-		
-		System.out.println("... soapREsponse.getSOAPBody()");
-		SOAPBody soapBody = soapResponse.getSOAPBody();
-		System.out.println("... Name name = soapResponse.getSOAPPart().getEnvelope().createName(\"statusCode\")");
-		//Name name = soapResponse.getSOAPPart().getEnvelope().createName("statusCode");
-		Name name = soapResponse.getSOAPPart().getEnvelope().createName("statusCode");
-		System.out.println("... Iterator<SOAPBodyElement> iterator = soapBody.getChildElements(name)");
-		Iterator<SOAPBodyElement> iterator = soapBody.getChildElements();
-		System.out.println("... SOAPBodyElement statusCode = iterator.next()");
-		SOAPBodyElement statusCode = null;
-		System.out.println("... while(iterator.hasNext())");
-		while(iterator.hasNext()) {
-			//System.out.println("statusCode = (SOAPBodyElement)iterator.next()");
-			//statusCode = (SOAPBodyElement)iterator.next();
-			SOAPBodyElement elem = iterator.next();
-			System.out.println("elem: " + elem);
-			Iterator<SOAPBodyElement> iterator2 = elem.getChildElements();
-			System.out.println("while(iterator2.hasNext())");
-			while(iterator2.hasNext()) {
-				SOAPBodyElement elem2 = iterator2.next();
-				System.out.println("elem2: " + elem2);
-				Iterator<SOAPBodyElement> iterator3 = elem2.getChildElements(name);
-				System.out.println("while(iterator3.hasNext())");
-				while(iterator3.hasNext()) {
-					SOAPBodyElement elem3 = iterator3.next();
-					System.out.println("elem3: " + elem3);
-					System.out.println("elem3.getTextContent(): " + elem3.getTextContent());
-				}
-			}
-		}
-		System.out.println("statusCode: " + statusCode);
-		
-		logger.info("SOAPResponse received. statusCode: "  + ", statusDetail: " ); 
+		logger.info("SOAPResponse received. statusCode: " + getStatusCode(soapResponse) + ", statusDetail: " + getStatusDetail(soapResponse));
 		soapConnection.close();
 		return soapResponse;
 	}
-	
-	public SOAPMessage getCampaignTargetDetails(String soapEndpointURL, String username, String password, long campaignTargetId) throws UnsupportedOperationException, SOAPException, IOException {
-		logger.info("Calling getCampaignTargetDetails() by user " + username + " for campaignTargetId " + campaignTargetId + " ...");
+
+	public SOAPMessage getCampaignTargetDetails(String soapEndpointURL, String username, String password,
+			long campaignTargetId) throws UnsupportedOperationException, SOAPException, IOException {
+		logger.info("Calling getCampaignTargetDetails() by user " + username + " for campaignTargetId "
+				+ campaignTargetId + " ...");
 		SOAPConnection soapConnection = SOAPConnectionFactory.newInstance().createConnection();
 		SOAPMessage soapRequest = getSOAPMessage_getCampaignTargetDetails(username, password, campaignTargetId);
 		SOAPMessage soapResponse = soapConnection.call(soapRequest, soapEndpointURL);
-		logger.info("SOAPResponse received. statusCode: " + soapResponse.getSOAPBody().getAttribute("statusCode") + ", statusDetail: " + soapResponse.getSOAPBody().getAttribute("statusDetail")); 
+		logger.info("SOAPResponse received. statusCode: " + getStatusCode(soapResponse) + ", statusDetail: " + getStatusDetail(soapResponse));
 		soapConnection.close();
 		return soapResponse;
 	}
 	/*
-	private void callSoapWebService(String soapEndpointUrl, String method) {
-		try {
-			// Create SOAP Connection
-			SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
-			SOAPConnection soapConnection = soapConnectionFactory.createConnection();
+	 * private void callSoapWebService(String soapEndpointUrl, String method) { try
+	 * { // Create SOAP Connection SOAPConnectionFactory soapConnectionFactory =
+	 * SOAPConnectionFactory.newInstance(); SOAPConnection soapConnection =
+	 * soapConnectionFactory.createConnection();
+	 * 
+	 * // Send SOAP Message to SOAP Server String username = "CUBE_B2C"; String
+	 * password = "P@ssw0rd"; String code = "Blabla_2"; String internalName =
+	 * "InternalName_of_Blabla_2"; String[] contactNumbers = new String[] { "12",
+	 * "13" };
+	 * 
+	 * SOAPMessage soapResponse = soapConnection.call(
+	 * getSOAPMessage_createOrUpdateTarget(username, password, campaignTargetDto),
+	 * soapEndpointUrl);
+	 * 
+	 * // Print the SOAP Response System.out.println("Response SOAP Message:");
+	 * soapResponse.writeTo(System.out); System.out.println();
+	 * 
+	 * soapConnection.close(); } catch (Exception e) { System.err.println(
+	 * "\nError occurred while sending SOAP Request to Server!\nMake sure you have the correct endpoint URL and SOAPAction!\n"
+	 * ); e.printStackTrace(); } }
+	 */
 
-			// Send SOAP Message to SOAP Server
-			String username = "CUBE_B2C";
-			String password = "P@ssw0rd";
-			String code = "Blabla_2";
-			String internalName = "InternalName_of_Blabla_2";
-			String[] contactNumbers = new String[] { "12", "13" };
-			
-			SOAPMessage soapResponse = soapConnection.call(
-					getSOAPMessage_createOrUpdateTarget(username, password, campaignTargetDto),
-					soapEndpointUrl);
-
-			// Print the SOAP Response
-			System.out.println("Response SOAP Message:");
-			soapResponse.writeTo(System.out);
-			System.out.println();
-
-			soapConnection.close();
-		} catch (Exception e) {
-			System.err.println(
-					"\nError occurred while sending SOAP Request to Server!\nMake sure you have the correct endpoint URL and SOAPAction!\n");
-			e.printStackTrace();
-		}
-	}
-	*/
-
-	private SOAPMessage getSOAPMessage_createOrUpdateTarget(String username, String password, CampaignTargetDto campaignTargetDto) throws IOException, SOAPException {
+	private SOAPMessage getSOAPMessage_createOrUpdateTarget(String username, String password,
+			CampaignTargetDto campaignTargetDto) throws IOException, SOAPException {
 		String msg = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:v1=\"http://v1_0.ExternalCampaignService.service.secutix.com/\"\n"
 				+ "xmlns:ns2=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\">\n"
 				+ "   <soapenv:Header>\n" + "      <ns2:Security soapenv:mustUnderstand=\"1\">\n"
@@ -137,8 +98,8 @@ public class SAMService {
 				+ "         <!--<requestId></requestId>-->\n" + "         <!--Optional:-->\n"
 				+ "         <!--<campaignTargetId></campaignTargetId>-->\n" + "         <!--Optional:-->\n"
 				+ "         <code>" + campaignTargetDto.getCode() + "</code>\n" + // make sure code is not available yet
-				"         <!--Optional:-->\n" + "         <internalName>" + campaignTargetDto.getInternalName()+ "</internalName>\n"
-				+ "         <!--Zero or more repetitions:-->\n";
+				"         <!--Optional:-->\n" + "         <internalName>" + campaignTargetDto.getInternalName()
+				+ "</internalName>\n" + "         <!--Zero or more repetitions:-->\n";
 
 		for (String contactNumber : campaignTargetDto.getContactNumbers()) {
 			msg += "         <contactNumbers>" + contactNumber + "</contactNumbers>\n";
@@ -168,32 +129,60 @@ public class SAMService {
 		SOAPMessage soapMessage = MessageFactory.newInstance().createMessage(null, is);
 		return soapMessage;
 	}
+
+	private static String getSOAPMessageAsString(SOAPMessage soapMessage) {
+		try {
+
+			TransformerFactory tff = TransformerFactory.newInstance();
+			Transformer tf = tff.newTransformer();
+
+			// Set formatting
+
+			tf.setOutputProperty(OutputKeys.INDENT, "yes");
+			tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+
+			Source sc = soapMessage.getSOAPPart().getContent();
+
+			ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
+			StreamResult result = new StreamResult(streamOut);
+			tf.transform(sc, result);
+
+			String strMessage = streamOut.toString();
+			return strMessage;
+		} catch (Exception e) {
+			System.out.println("Exception in getSOAPMessageAsString " + e.getMessage());
+			return null;
+		}
+
+	}
 	
-	 private static String getSOAPMessageAsString(SOAPMessage soapMessage) {
-	        try {
-
-	           TransformerFactory tff = TransformerFactory.newInstance();
-	           Transformer tf = tff.newTransformer();
-
-	           // Set formatting
-	          
-	           tf.setOutputProperty(OutputKeys.INDENT, "yes");
-	           tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount",
-	                 "2");
-	           
-	           Source sc = soapMessage.getSOAPPart().getContent();
-
-	           ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
-	           StreamResult result = new StreamResult(streamOut);
-	           tf.transform(sc, result);
-
-	           String strMessage = streamOut.toString();
-	           return strMessage;
-	        } catch (Exception e) {
-	           System.out.println("Exception in getSOAPMessageAsString "
-	                 + e.getMessage());
-	           return null;
-	        }
-
-	     }
+	private String getStatusCode(SOAPMessage soapMessage) throws SOAPException {
+		Iterator<SOAPBodyElement> iterator = soapMessage.getSOAPBody().getChildElements();
+		if(iterator.hasNext()) {
+			Iterator<SOAPBodyElement> iterator2 = iterator.next().getChildElements();
+			if (iterator2.hasNext()) {
+				Name name = soapMessage.getSOAPPart().getEnvelope().createName("statusCode");
+				Iterator<SOAPBodyElement> iterator3 = iterator2.next().getChildElements(name);
+				if (iterator3.hasNext()) {
+					return iterator3.next().getTextContent();
+				}
+			}
+		}
+		return "[statusCode could not be found in the SOAPResponse]";
+	}
+	
+	private String getStatusDetail(SOAPMessage soapMessage) throws SOAPException {
+		Iterator<SOAPBodyElement> iterator = soapMessage.getSOAPBody().getChildElements();
+		if(iterator.hasNext()) {
+			Iterator<SOAPBodyElement> iterator2 = iterator.next().getChildElements();
+			if (iterator2.hasNext()) {
+				Name name = soapMessage.getSOAPPart().getEnvelope().createName("statusDetail");
+				Iterator<SOAPBodyElement> iterator3 = iterator2.next().getChildElements(name);
+				if (iterator3.hasNext()) {
+					return iterator3.next().getTextContent();
+				}
+			}
+		}
+		return "[statusDetail could not be found in the SOAPResponse]";
+	}
 }

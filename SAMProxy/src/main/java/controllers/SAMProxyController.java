@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -19,12 +20,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import dto.CampaignTargetDto;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.XML;
-//import net.minidev.json.JSONObject;
+import net.minidev.json.JSONObject;
 import service.SAMService;
 
 @RestController
@@ -38,7 +38,7 @@ public class SAMProxyController {
 	}
 	
 	@RequestMapping(value="/createOrUpdateTarget", method=RequestMethod.POST)
-	public JSONObject createOrUpdateTarget(/*@RequestParam String soapEndpointURL, @RequestParam String username, @RequestParam String password,*/ @RequestBody CampaignTargetDto campaignTargetDto/*, BindingResult result*/) throws UnsupportedOperationException, SOAPException, IOException, JSONException {
+	public JSONObject createOrUpdateTarget(/*@RequestParam String soapEndpointURL, @RequestParam String username, @RequestParam String password,*/ @RequestBody @Valid CampaignTargetDto campaignTargetDto/*, BindingResult result*/) throws UnsupportedOperationException, SOAPException, IOException, JSONException {
 		SAMService samService = new SAMService();
 		System.out.println("Controller: createOrUpdateTarget() called.");
 		System.out.println("Controller: campaignTargetDto: " + campaignTargetDto);
@@ -55,7 +55,9 @@ public class SAMProxyController {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		soapResponse.writeTo(out);
 		String soapResponseXMLString = new String(out.toByteArray());
-		JSONObject jsonResponse = XML.toJSONObject(soapResponseXMLString);
+		String jsonString=org.json.XML.toJSONObject(soapResponseXMLString).toString();
+	
+		JSONObject jsonResponse = new ObjectMapper().readValue(jsonString, JSONObject.class);
 		/*
 		if (result.hasErrors()) {
 			System.out.println("CONTORLLER: BindingResult result has Errors!");

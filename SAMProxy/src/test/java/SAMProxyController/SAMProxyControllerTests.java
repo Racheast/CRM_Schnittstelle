@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -54,7 +55,7 @@ public class SAMProxyControllerTests {
 
 	}
 	
-	/*
+	
 	@Test
 	public void postInvalidCampaignTargetDto() throws IOException, Exception {
 		CampaignTargetDto dto = new CampaignTargetDto();
@@ -84,7 +85,7 @@ public class SAMProxyControllerTests {
 
 		Assert.assertTrue("Message", constraintViolations.size() == 3);
 	}
-	*/
+	
 	@Test
 	public void postCampaignTargetDto() throws IOException, Exception {
 		System.out.println("Starting postCampaignTargetDto (test)");
@@ -93,7 +94,7 @@ public class SAMProxyControllerTests {
 		String soapEndoiuntURL = "https://cube.ws.secutix.com/tnco/external-remoting/com.secutix.service.campaign.v1_0.ExternalCampaignService.webservice?wsdl";
 
 		CampaignTargetDto dto = new CampaignTargetDto();
-		dto.setCode("TestT_3");
+		dto.setCode("TestT333");
 		dto.setInternalName("Sample target for testing purposes.");
 		dto.setContactNumbers(new String[1]);
 		// RequestParam String soapEndpointURL, @RequestParam String username,
