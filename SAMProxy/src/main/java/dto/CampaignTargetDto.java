@@ -19,7 +19,7 @@ public class CampaignTargetDto {
 	@Length(max = 60)
 	private String internalName; //mandatory, if campaignTargetId is not provided. Max Length 60 chars.
 	
-	@Size(max = 500000)
+	@Size(min = 1, max = 500000)
 	private String[] contactNumbers; //mandatory. max arraylength = 500000.
 	
 	public CampaignTargetDto() {

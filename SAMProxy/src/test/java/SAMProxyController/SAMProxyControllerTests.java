@@ -20,6 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,7 +81,7 @@ public class SAMProxyControllerTests {
 		Iterator<ConstraintViolation<CampaignTargetDto>> iter = constraintViolations.iterator();
 		while (iter.hasNext()) {
 			ConstraintViolation<CampaignTargetDto> violation = iter.next();
-			//System.out.println("VIOLATION: property path: " + violation.getPropertyPath() + ", message: " + violation.getMessage());
+			System.out.println("VIOLATION: property path: " + violation.getPropertyPath() + ", message: " + violation.getMessage());
 		}
 
 		Assert.assertTrue("Message", constraintViolations.size() == 3);
@@ -94,22 +95,16 @@ public class SAMProxyControllerTests {
 		String soapEndoiuntURL = "https://cube.ws.secutix.com/tnco/external-remoting/com.secutix.service.campaign.v1_0.ExternalCampaignService.webservice?wsdl";
 
 		CampaignTargetDto dto = new CampaignTargetDto();
-		dto.setCode("TestT333");
-		dto.setInternalName("Sample target for testing purposes.");
-		dto.setContactNumbers(new String[1]);
-		// RequestParam String soapEndpointURL, @RequestParam String username,
-		// @RequestParam String password
-		/*
-		mockMvc.perform(post("/createOrUpdateTarget?soapEndpointURL=" + soapEndoiuntURL + "&username=" + username
+		dto.setCode("TestT333?!");
+		dto.setInternalName("Sample target for testing purposes.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		dto.setContactNumbers(new String[0]);
+		
+		MvcResult mvcResult = mockMvc.perform(post("/createOrUpdateTarget?soapEndpointURL=" + soapEndoiuntURL + "&username=" + username
 				+ "&password=" + password).contentType(TestUtil.APPLICATION_JSON_UTF8)
 						.content(TestUtil.convertObjectToJsonBytes(dto)))
-				.andExpect(status().isOk());
-		 */
+				.andExpect(status().isOk()).andReturn();
 		
-		mockMvc.perform(post("/createOrUpdateTarget").contentType(TestUtil.APPLICATION_JSON_UTF8)
-						.content(TestUtil.convertObjectToJsonBytes(dto)))
-				.andExpect(status().isOk());
-		
+		System.out.println("mvcResult: " + mvcResult.getResponse().getContentAsString());
 	}
 	/*
 	 * final ProductModel productModel = new ProductModel(); 26
