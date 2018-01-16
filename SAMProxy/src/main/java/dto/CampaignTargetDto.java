@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty; 
 
 public class CampaignTargetDto {
-	//private long campaignTargetId;  //optional
+		
 	@NotEmpty
 	@Length(max = 8)
 	@Pattern(regexp = "^[A-Za-z0-9]+$") //only alphanumeric
@@ -52,9 +52,10 @@ public class CampaignTargetDto {
 
 	@Override
 	public String toString() {
-		return "CampaignTargetDto [code=" + code + ", internalName=" + internalName + ", contactNumbers="
-				+ Arrays.toString(contactNumbers) + "]";
+		return "CampaignTargetDto [code=" + code + ", internalName="
+				+ internalName + ", contactNumbers=" + Arrays.toString(contactNumbers) + "]";
 	}
+
 	
 	
 }
