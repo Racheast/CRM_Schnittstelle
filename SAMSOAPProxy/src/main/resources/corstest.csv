@@ -1,5 +1,2 @@
-/createSegment,http://localhost:4848
-/addOrRemoveMembersFromSegment,http://localhost:4848
-/addOrUpdateListMembers,http://localhost:4848
-/getBatch,http://localhost:4848
-/getMemberFromList,http://localhost:4848
+/createOrUpdateTarget,http://localhost:4848
+/getCampaignTargetDetails,http://localhost:4848

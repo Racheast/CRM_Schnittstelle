@@ -4,38 +4,34 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Iterator;
-
 import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.Name;
-import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.soap.SOAPPart;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
-
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.NodeList;
 
 import dto.CampaignTargetDto;
+import util.SOAPToolsForSAM;
 
 @Service
 public class SAMService {
 
 	private Logger logger;
-
+	
+	@Autowired
+	private SOAPToolsForSAM soapToolsForSAM;
+	
 	public SAMService() {
 		this.logger = Logger.getLogger(SAMService.class);
 	}
@@ -47,7 +43,7 @@ public class SAMService {
 		SOAPConnection soapConnection = SOAPConnectionFactory.newInstance().createConnection();
 		SOAPMessage soapRequest = getSOAPMessage_createOrUpdateTarget(username, password, campaignTargetDto);
 		SOAPMessage soapResponse = soapConnection.call(soapRequest, soapEndpointURL);
-		logger.info("SOAPResponse received. statusCode: " + getStatusCode(soapResponse) + ", statusDetail: " + getStatusDetail(soapResponse));
+		logger.info("SOAPResponse received. statusCode: " + soapToolsForSAM.getStatusCode(soapResponse) + ", statusDetail: " + soapToolsForSAM.getStatusDetail(soapResponse));
 		soapConnection.close();
 		return soapResponse;
 	}
@@ -59,32 +55,10 @@ public class SAMService {
 		SOAPConnection soapConnection = SOAPConnectionFactory.newInstance().createConnection();
 		SOAPMessage soapRequest = getSOAPMessage_getCampaignTargetDetails(username, password, campaignTargetId);
 		SOAPMessage soapResponse = soapConnection.call(soapRequest, soapEndpointURL);
-		logger.info("SOAPResponse received. statusCode: " + getStatusCode(soapResponse) + ", statusDetail: " + getStatusDetail(soapResponse));
+		logger.info("SOAPResponse received. statusCode: " + soapToolsForSAM.getStatusCode(soapResponse) + ", statusDetail: " + soapToolsForSAM.getStatusDetail(soapResponse));
 		soapConnection.close();
 		return soapResponse;
 	}
-	/*
-	 * private void callSoapWebService(String soapEndpointUrl, String method) { try
-	 * { // Create SOAP Connection SOAPConnectionFactory soapConnectionFactory =
-	 * SOAPConnectionFactory.newInstance(); SOAPConnection soapConnection =
-	 * soapConnectionFactory.createConnection();
-	 * 
-	 * // Send SOAP Message to SOAP Server String username = "CUBE_B2C"; String
-	 * password = "P@ssw0rd"; String code = "Blabla_2"; String internalName =
-	 * "InternalName_of_Blabla_2"; String[] contactNumbers = new String[] { "12",
-	 * "13" };
-	 * 
-	 * SOAPMessage soapResponse = soapConnection.call(
-	 * getSOAPMessage_createOrUpdateTarget(username, password, campaignTargetDto),
-	 * soapEndpointUrl);
-	 * 
-	 * // Print the SOAP Response System.out.println("Response SOAP Message:");
-	 * soapResponse.writeTo(System.out); System.out.println();
-	 * 
-	 * soapConnection.close(); } catch (Exception e) { System.err.println(
-	 * "\nError occurred while sending SOAP Request to Server!\nMake sure you have the correct endpoint URL and SOAPAction!\n"
-	 * ); e.printStackTrace(); } }
-	 */
 
 	private SOAPMessage getSOAPMessage_createOrUpdateTarget(String username, String password,
 			CampaignTargetDto campaignTargetDto) throws IOException, SOAPException {
@@ -129,7 +103,8 @@ public class SAMService {
 		SOAPMessage soapMessage = MessageFactory.newInstance().createMessage(null, is);
 		return soapMessage;
 	}
-
+	
+	/*
 	private static String getSOAPMessageAsString(SOAPMessage soapMessage) {
 		try {
 
@@ -185,4 +160,5 @@ public class SAMService {
 		}
 		return "[statusDetail could not be found in the SOAPResponse]";
 	}
+	*/
 }

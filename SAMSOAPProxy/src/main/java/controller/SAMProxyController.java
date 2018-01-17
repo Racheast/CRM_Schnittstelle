@@ -14,6 +14,8 @@ import javax.xml.soap.SOAPMessage;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -35,32 +37,35 @@ import org.json.XML;
 
 import net.minidev.json.JSONObject;
 import service.SAMService;
+import util.SOAPToolsForSAM;
 
-//@EnableWebMvc
 @RestController
 public class SAMProxyController {
 	
 	@Autowired
 	private SAMService samService;
 	
-
+	@Autowired
+	private SOAPToolsForSAM soapToolsForSAM;
+	
 	@RequestMapping(value="/createOrUpdateTarget", method=RequestMethod.POST)
-	public JSONObject createOrUpdateTarget(@RequestParam String soapEndpointURL, @RequestParam String username, @RequestParam String password, @RequestBody @Valid CampaignTargetDto campaignTargetDto, BindingResult result) throws UnsupportedOperationException, SOAPException, IOException, JSONException {
-		//SAMService samService = new SAMService();
-		System.out.println("Controller: createOrUpdateTarget() called.");
-		System.out.println("Controller: campaignTargetDto: " + campaignTargetDto);
-		System.out.println("Controller: samService=" + samService);
-		SOAPMessage soapResponse = samService.createOrUpdateTarget(soapEndpointURL, username, password, campaignTargetDto);
+	public ResponseEntity<JSONObject> createOrUpdateTarget(@RequestParam String soapEndpointURL, @RequestParam String username, @RequestParam String password, @RequestBody @Valid CampaignTargetDto campaignTargetDto, BindingResult result) throws UnsupportedOperationException, SOAPException, IOException, JSONException {
 		
 		if (result.hasErrors()) {
-			return buildErrorsResponseDtoAsJSONObject(result.getAllErrors());
+			ResponseEntity<JSONObject> response = new ResponseEntity<JSONObject>(buildErrorsResponseDtoAsJSONObject(result.getAllErrors()),HttpStatus.BAD_REQUEST);
+			return response;
 		}else {
-			return soapMessage_to_JSONObject(soapResponse);
+			SOAPMessage soapResponse = samService.createOrUpdateTarget(soapEndpointURL, username, password, campaignTargetDto);
+			if(soapToolsForSAM.getStatusCode(soapResponse).equals("success")) {
+				return new ResponseEntity<JSONObject>(soapMessage_to_JSONObject(soapResponse), HttpStatus.OK);
+			}else {
+				return new ResponseEntity<JSONObject>(soapMessage_to_JSONObject(soapResponse), HttpStatus.BAD_REQUEST);
+			}
 		}
 	}
 	
 	@RequestMapping(value="/getCampaignTargetDetails", method=RequestMethod.GET)
-	public Object getCampaignTargetDetails() {
+	public ResponseEntity<JSONObject> getCampaignTargetDetails() {
 		//TODO
 		return null;
 	}

@@ -42,12 +42,12 @@ import dto.CampaignTargetDto;
 import junit.framework.Assert;
 import net.minidev.json.JSONObject;
 import service.SAMService;
+import util.SOAPToolsForSAM;
 import util.TestUtil;
 
-//@EnableWebMvc
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class, SAMProxyController.class, SAMService.class })
+@ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class, SAMProxyController.class, SAMService.class, SOAPToolsForSAM.class })
 @SpringBootApplication
 public class SAMProxyControllerTests {
 	private MockMvc mockMvc;
@@ -55,9 +55,6 @@ public class SAMProxyControllerTests {
 	
 	@Autowired
 	protected WebApplicationContext webApplicationContext;
-	
-	@Autowired
-	private SAMProxyController samProxyController;
 	
 	@Before
 	public void setup() {
@@ -70,7 +67,7 @@ public class SAMProxyControllerTests {
 	
 	
 	@Test
-	public void postInvalidCampaignTargetDto() throws IOException, Exception {
+	public void postCampaignTargetDto_invalidAttributes() throws IOException, Exception {
 		CampaignTargetDto dto = new CampaignTargetDto();
 		dto.setCode("1234!"); // invalid character (!)
 		dto.setInternalName("AbcdefghijAbcdefghij"); // too long string
@@ -100,21 +97,21 @@ public class SAMProxyControllerTests {
 	}
 	
 	@Test
-	public void postCampaignTargetDto() throws IOException, Exception {
+	public void postCampaignTargetDto_existingCode() throws IOException, Exception {
 		System.out.println("Starting postCampaignTargetDto (test)");
 		String username = "CUBE_B2C";
 		String password = "P@ssw0rd";
 		String soapEndoiuntURL = "https://cube.ws.secutix.com/tnco/external-remoting/com.secutix.service.campaign.v1_0.ExternalCampaignService.webservice?wsdl";
 
 		CampaignTargetDto dto = new CampaignTargetDto();
-		dto.setCode("TestT333?!");
-		dto.setInternalName("Sample target for testing purposes.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		dto.setContactNumbers(new String[0]);
+		dto.setCode("TestT3");
+		dto.setInternalName("Sample target for testing purposes.");
+		dto.setContactNumbers(new String[1]);
 		
 		MvcResult mvcResult = mockMvc.perform(post("/createOrUpdateTarget?soapEndpointURL=" + soapEndoiuntURL + "&username=" + username
 				+ "&password=" + password).contentType(TestUtil.APPLICATION_JSON_UTF8)
 						.content(TestUtil.convertObjectToJsonBytes(dto)))
-				.andExpect(status().isOk()).andReturn();
+				.andExpect(status().isBadRequest()).andReturn();
 		
 		System.out.println("mvcResult: " + mvcResult.getResponse().getContentAsString());
 	}
