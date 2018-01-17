@@ -44,12 +44,11 @@ import net.minidev.json.JSONObject;
 import service.SAMService;
 import util.TestUtil;
 
-@EnableAutoConfiguration
-@EnableWebMvc
+//@EnableWebMvc
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class, SAMProxyController.class, SAMService.class })
-@SpringBootApplication(scanBasePackages={"controllers", "service"})
+@SpringBootApplication
 public class SAMProxyControllerTests {
 	private MockMvc mockMvc;
 	private LocalValidatorFactoryBean localValidatorFactory;
