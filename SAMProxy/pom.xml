@@ -45,7 +45,7 @@
 		        </exclusion>
 		    </exclusions>
 		</dependency>
-		
+	
 		<dependency>
     		<groupId>com.opencsv</groupId>
      		<artifactId>opencsv</artifactId>
@@ -56,6 +56,7 @@
 		  	<artifactId>json</artifactId>
 		  	<version>20171018</version>
 		</dependency>
+	
 	</dependencies>
 
 	<build>
