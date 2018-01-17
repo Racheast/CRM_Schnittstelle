@@ -101,14 +101,14 @@ public class SAMProxyControllerTests {
 		System.out.println("Starting postCampaignTargetDto (test)");
 		String username = "CUBE_B2C";
 		String password = "P@ssw0rd";
-		String soapEndoiuntURL = "https://cube.ws.secutix.com/tnco/external-remoting/com.secutix.service.campaign.v1_0.ExternalCampaignService.webservice?wsdl";
+		String soapEndpointURL = "https://cube.ws.secutix.com/tnco/external-remoting/com.secutix.service.campaign.v1_0.ExternalCampaignService.webservice?wsdl";
 
 		CampaignTargetDto dto = new CampaignTargetDto();
 		dto.setCode("TestT3");
 		dto.setInternalName("Sample target for testing purposes.");
 		dto.setContactNumbers(new String[1]);
 		
-		MvcResult mvcResult = mockMvc.perform(post("/createOrUpdateTarget?soapEndpointURL=" + soapEndoiuntURL + "&username=" + username
+		MvcResult mvcResult = mockMvc.perform(post("/createOrUpdateTarget?soapEndpointURL=" + soapEndpointURL + "&username=" + username
 				+ "&password=" + password).contentType(TestUtil.APPLICATION_JSON_UTF8)
 						.content(TestUtil.convertObjectToJsonBytes(dto)))
 				.andExpect(status().isBadRequest()).andReturn();
