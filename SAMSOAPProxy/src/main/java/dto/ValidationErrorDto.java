@@ -1,11 +1,11 @@
 package dto;
 
-public class ErrorDto {
+public class ValidationErrorDto{
 	private String objectName;
 	private String field;
 	private String defaultMessage;
 	
-	public ErrorDto() {
+	public ValidationErrorDto() {
 		
 	}
 	

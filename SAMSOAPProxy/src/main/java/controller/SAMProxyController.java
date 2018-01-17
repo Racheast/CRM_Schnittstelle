@@ -30,8 +30,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dto.CampaignTargetDto;
-import dto.ErrorDto;
+import dto.ValidationErrorDto;
 import dto.ErrorsResponseDto;
+import dto.SAMErrorDto;
 
 import org.json.XML;
 
@@ -52,14 +53,18 @@ public class SAMProxyController {
 	public ResponseEntity<JSONObject> createOrUpdateTarget(@RequestParam String soapEndpointURL, @RequestParam String username, @RequestParam String password, @RequestBody @Valid CampaignTargetDto campaignTargetDto, BindingResult result) throws UnsupportedOperationException, SOAPException, IOException, JSONException {
 		
 		if (result.hasErrors()) {
-			ResponseEntity<JSONObject> response = new ResponseEntity<JSONObject>(buildErrorsResponseDtoAsJSONObject(result.getAllErrors()),HttpStatus.BAD_REQUEST);
+			ResponseEntity<JSONObject> response = new ResponseEntity<JSONObject>(buildErrorsResponseDtoAsJSONObject(result.getAllErrors(), null),HttpStatus.BAD_REQUEST);
 			return response;
 		}else {
 			SOAPMessage soapResponse = samService.createOrUpdateTarget(soapEndpointURL, username, password, campaignTargetDto);
+			
 			if(soapToolsForSAM.getStatusCode(soapResponse).equals("success")) {
 				return new ResponseEntity<JSONObject>(soapMessage_to_JSONObject(soapResponse), HttpStatus.OK);
 			}else {
-				return new ResponseEntity<JSONObject>(soapMessage_to_JSONObject(soapResponse), HttpStatus.BAD_REQUEST);
+				SAMErrorDto samError = new SAMErrorDto();
+				samError.setStatusCode(soapToolsForSAM.getStatusCode(soapResponse));
+				samError.setStatusDetail(soapToolsForSAM.getStatusDetail(soapResponse));
+				return new ResponseEntity<JSONObject>(buildErrorsResponseDtoAsJSONObject(null, samError), HttpStatus.BAD_REQUEST);
 			}
 		}
 	}
@@ -78,22 +83,27 @@ public class SAMProxyController {
 		return new ObjectMapper().readValue(jsonString, JSONObject.class);
 	}
 	
-	private ErrorsResponseDto buildErrorsResponseDto(List<ObjectError> objectErrors) {
+	private ErrorsResponseDto buildErrorsResponseDto(List<ObjectError> validationErrors, SAMErrorDto samError) {
 		ErrorsResponseDto errorsResponseDto = new ErrorsResponseDto();
-		ArrayList<ErrorDto> errorDtos = new ArrayList<ErrorDto>();
-		for(ObjectError e: objectErrors) {
-			ErrorDto errorDto = new ErrorDto();
-			errorDto.setObjectName(e.getObjectName());
-			errorDto.setField(((FieldError) e).getField());
-			errorDto.setDefaultMessage(e.getDefaultMessage());
-			errorDtos.add(errorDto);
+		if(validationErrors != null) {
+			ArrayList<ValidationErrorDto> validationErrorDtos = new ArrayList<ValidationErrorDto>();
+			for(ObjectError e: validationErrors) {
+				ValidationErrorDto validationErrorDto = new ValidationErrorDto();
+				validationErrorDto.setObjectName(e.getObjectName());
+				validationErrorDto.setField(((FieldError) e).getField());
+				validationErrorDto.setDefaultMessage(e.getDefaultMessage());
+				validationErrorDtos.add(validationErrorDto);
+			}
+			errorsResponseDto.setValidationErrors(validationErrorDtos);
 		}
-		errorsResponseDto.setErrors(errorDtos);
+		if(samError != null) {
+			errorsResponseDto.setSamError(samError);
+		}
 		return errorsResponseDto;
 	}
 	
-	private JSONObject buildErrorsResponseDtoAsJSONObject(List<ObjectError> objectErrors) throws IOException {
-		ErrorsResponseDto errorResponseDto = buildErrorsResponseDto(objectErrors);
+	private JSONObject buildErrorsResponseDtoAsJSONObject(List<ObjectError> validationErrors, SAMErrorDto samError) throws IOException {
+		ErrorsResponseDto errorResponseDto = buildErrorsResponseDto(validationErrors, samError);
 		String jsonString = new ObjectMapper().writeValueAsString(errorResponseDto);
 		return new ObjectMapper().readValue(jsonString, JSONObject.class);
 	}
