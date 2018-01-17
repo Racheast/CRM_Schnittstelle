@@ -50,6 +50,7 @@
     		<groupId>com.opencsv</groupId>
      		<artifactId>opencsv</artifactId>
      		<version>4.0</version>
+     		
   		</dependency>
   		<dependency>
 		  	<groupId>org.json</groupId>
@@ -57,6 +58,11 @@
 		  	<version>20171018</version>
 		</dependency>
 	
+		<dependency>
+		    <groupId>net.minidev</groupId>
+		    <artifactId>json-smart</artifactId>
+		    <version>1.0.9</version>
+		</dependency>
 	</dependencies>
 
 	<build>
