@@ -49,6 +49,7 @@ public class SAMProxyController {
 	@Autowired
 	private SOAPToolsForSAM soapToolsForSAM;
 	
+	/* FAKE REST ENDPOINT. ONLY FOR ERROR TESTING. REMOVE IT AFTERWARDS!
 	@RequestMapping(value="/createOrUpdateTarget", method=RequestMethod.POST)
 	public ResponseEntity<JSONObject> createOrUpdateTarget(@RequestParam String soapEndpointURL, @RequestParam String username, @RequestParam String password, @RequestBody @Valid CampaignTargetDto campaignTargetDto, BindingResult result) throws UnsupportedOperationException, SOAPException, IOException, JSONException {
 		
@@ -57,7 +58,6 @@ public class SAMProxyController {
 			return response;
 		}else {
 			SOAPMessage soapResponse = samService.createOrUpdateTarget(soapEndpointURL, username, password, campaignTargetDto);
-			
 			if(soapToolsForSAM.getStatusCode(soapResponse).equals("success")) {
 				return new ResponseEntity<JSONObject>(soapMessage_to_JSONObject(soapResponse), HttpStatus.OK);
 			}else {
@@ -65,6 +65,35 @@ public class SAMProxyController {
 				samError.setStatusCode(soapToolsForSAM.getStatusCode(soapResponse));
 				samError.setStatusDetail(soapToolsForSAM.getStatusDetail(soapResponse));
 				return new ResponseEntity<JSONObject>(buildErrorsResponseDtoAsJSONObject(null, samError), HttpStatus.BAD_REQUEST);
+			}
+		}
+	}
+*/
+	
+	/* WORKING CODE! Commented out for ERROR RESPONSE TESTING ONLY.*/
+	@RequestMapping(value="/createOrUpdateTarget", method=RequestMethod.POST)
+	public ResponseEntity<JSONObject> createOrUpdateTarget(@RequestParam String soapEndpointURL, @RequestParam String username, @RequestParam String password, @RequestBody @Valid CampaignTargetDto campaignTargetDto, BindingResult result) throws UnsupportedOperationException, SOAPException, IOException, JSONException {
+		
+		if (result.hasErrors()) {
+			ResponseEntity<JSONObject> response = new ResponseEntity<JSONObject>(buildErrorsResponseDtoAsJSONObject(result.getAllErrors(), null),HttpStatus.BAD_REQUEST);
+			return response;
+		}else {
+			try {	
+				SOAPMessage soapResponse = samService.createOrUpdateTarget(soapEndpointURL, username, password, campaignTargetDto);
+			
+				if(soapToolsForSAM.getStatusCode(soapResponse).equals("success")) {
+					return new ResponseEntity<JSONObject>(soapMessage_to_JSONObject(soapResponse), HttpStatus.OK);
+				}else {
+					SAMErrorDto samError = new SAMErrorDto();
+					samError.setStatusCode(soapToolsForSAM.getStatusCode(soapResponse));
+					samError.setStatusDetail(soapToolsForSAM.getStatusDetail(soapResponse));
+					return new ResponseEntity<JSONObject>(buildErrorsResponseDtoAsJSONObject(null, samError), HttpStatus.BAD_REQUEST);
+				}
+			}catch (Exception e) {
+				SAMErrorDto samError = new SAMErrorDto();
+				samError.setStatusCode("exception");
+				samError.setStatusDetail("An exception was caught in the SAMSOAPProxy.\n" + e.getMessage());
+				return new ResponseEntity<JSONObject>(buildErrorsResponseDtoAsJSONObject(null, samError), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 	}
