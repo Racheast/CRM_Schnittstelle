@@ -70,7 +70,7 @@ public class SAMProxyController {
 	}
 */
 	
-	/* WORKING CODE! Commented out for ERROR RESPONSE TESTING ONLY.*/
+	
 	@RequestMapping(value="/createOrUpdateTarget", method=RequestMethod.POST)
 	public ResponseEntity<JSONObject> createOrUpdateTarget(@RequestParam String soapEndpointURL, @RequestParam String username, @RequestParam String password, @RequestBody @Valid CampaignTargetDto campaignTargetDto, BindingResult result) throws UnsupportedOperationException, SOAPException, IOException, JSONException {
 		
