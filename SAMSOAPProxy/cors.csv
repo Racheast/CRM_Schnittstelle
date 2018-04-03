@@ -1,0 +1,2 @@
+/createOrUpdateTarget,http://localhost:4848
+/getCampaignTargetDetails,http://localhost:4848

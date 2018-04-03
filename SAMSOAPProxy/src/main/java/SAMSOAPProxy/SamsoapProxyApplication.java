@@ -34,18 +34,18 @@ public class SamsoapProxyApplication {
 	public static void main(String[] args) {
 		logger = Logger.getLogger(SamsoapProxyApplication.class);
 		logger.info("Starting SamSoapProxy ...");
-		if(args.length !=0) {  //hange to !=2
+		if(args.length !=2) {  //hange to !=2
 			logger.error("Wrong number of parameters!");
 			logger.info("1. parameter: Path to cors.csv");
 			logger.info("2. parameter: Port on which this application should run.");
 		}else {
-			//corsPath = args[0];
-			//port = Integer.parseInt(args[1]);
+			corsPath = args[0];
+			port = Integer.parseInt(args[1]);
+			
 			//only for testing in eclipse run
-			corsPath = "." + File.separator + "src" + File.separator + "main" + File.separator
-							+ "resources" + File.separator + "corstest.csv";
+			//corsPath = "." + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator + "corstest.csv";
 			//only for testing in eclipse run
-			port=8090;
+			//port=8090;
 			
 			ConfigurableApplicationContext context = SpringApplication.run(SamsoapProxyApplication.class, new String[0]);
 	
@@ -63,7 +63,8 @@ public class SamsoapProxyApplication {
 			SpringApplication.exit(context);
 		}
 	}
-
+	
+	//sets all cors mappings of this application's rest endpoints according to the file specified in corsPath
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurerAdapter() {
@@ -90,6 +91,7 @@ public class SamsoapProxyApplication {
 		};
 	}
 	
+	//sets the port on which this application should run.
 	@Component
 	public class ContainerCustomizerBean implements EmbeddedServletContainerCustomizer {
 		
