@@ -1,7 +1,6 @@
 package SAMSOAPProxy;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -10,41 +9,45 @@ import java.util.Arrays;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
 import com.opencsv.CSVReader;
 
-//https://cube.pos.secutix.com/tnco/apidocs/ExternalCampaignService_latest.html
+//-DsamSoapCredentialsPath=C:\Users\Alex\Documents\SAMSOAPCredentials.csv
+
+@PropertySource(
+value = {
+        "classpath:application.properties",
+        "file:./configuration.properties"       
+})
 @SpringBootApplication(scanBasePackages = { "controller", "service", "util" })
 public class SamsoapProxyApplication {
 	private static Logger logger;
-	private static String corsPath;
-	private static int port;
+	@Value("${corsPath}")
+	private String corsPath;
 	
 	@Autowired
 	public static void main(String[] args) {
 		logger = Logger.getLogger(SamsoapProxyApplication.class);
 		logger.info("Starting SamSoapProxy ...");
-		if(args.length !=2) {  //hange to !=2
+		if(/*args.length != 2*/ true==false) {  
 			logger.error("Wrong number of parameters!");
 			logger.info("1. parameter: Path to cors.csv");
-			logger.info("2. parameter: Port on which this application should run.");
+			logger.info("2. parameter: Port on which this SAMSOAPProxy should run.");
 		}else {
-			corsPath = args[0];
-			port = Integer.parseInt(args[1]);
+			//WORKING CODE FOR JAR FILE
+			//corsPath = args[0];
+			//port = Integer.parseInt(args[1]);
 			
-			//only for testing in eclipse run
+			//WORKING CODE FOR TESTING IN ECLIPSE 
 			//corsPath = "." + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator + "corstest.csv";
-			//only for testing in eclipse run
 			//port=8090;
 			
 			ConfigurableApplicationContext context = SpringApplication.run(SamsoapProxyApplication.class, new String[0]);
@@ -71,8 +74,8 @@ public class SamsoapProxyApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				try {
-					//String filepath = "." + File.separator + "src" + File.separator + "main" + File.separator
-					//		+ "resources" + File.separator + "corstest.csv";
+					//WORKING CODE FOR TESTING IN ECLIPSE
+					//String filepath = "." + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator + "corstest.csv";
 					CSVReader reader = new CSVReader(new FileReader(corsPath));  
 					List<String[]> lines = reader.readAll();
 					reader.close();
@@ -90,8 +93,7 @@ public class SamsoapProxyApplication {
 			}
 		};
 	}
-	
-	//sets the port on which this application should run.
+	/*
 	@Component
 	public class ContainerCustomizerBean implements EmbeddedServletContainerCustomizer {
 		
@@ -99,5 +101,15 @@ public class SamsoapProxyApplication {
 		public void customize(ConfigurableEmbeddedServletContainer arg0) {
 			arg0.setPort(port);	
 		}
-	} 
+	}
+	*/
+	/*
+	  	SSL Configuration of application.properties:
+	 	server.ssl.key-alias=cert
+		server.ssl.key-password=changeit
+		server.ssl.key-store=classpath:keystore.jks
+		server.ssl.key-store-provider=SUN
+		server.ssl.key-store-type=JKS 
+	 */
+	
 }
