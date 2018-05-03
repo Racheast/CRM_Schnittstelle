@@ -9,7 +9,6 @@ import javax.xml.soap.SOAPConnectionFactory;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import dto.CampaignTargetDto;
 import util.SOAPToolsForSAM;
@@ -18,9 +17,6 @@ import util.SOAPToolsForSAM;
 public class SAMService {
 
 	private Logger logger;
-	
-	@Autowired
-	private SOAPToolsForSAM soapToolsForSAM;
 	
 	public SAMService() {
 		this.logger = Logger.getLogger(SAMService.class);
@@ -33,7 +29,7 @@ public class SAMService {
 		SOAPConnection soapConnection = SOAPConnectionFactory.newInstance().createConnection();
 		SOAPMessage soapRequest = getSOAPMessage_createOrUpdateTarget(username, password, campaignTargetDto);
 		SOAPMessage soapResponse = soapConnection.call(soapRequest, soapEndpointURL);
-		logger.info("SOAPResponse received. statusCode: " + soapToolsForSAM.getStatusCode(soapResponse) + ", statusDetail: " + soapToolsForSAM.getStatusDetail(soapResponse));
+		logger.info("SOAPResponse received. statusCode: " + SOAPToolsForSAM.getStatusCode(soapResponse) + ", statusDetail: " + SOAPToolsForSAM.getStatusDetail(soapResponse));
 		soapConnection.close();
 		return soapResponse;
 	}
@@ -45,7 +41,7 @@ public class SAMService {
 		SOAPConnection soapConnection = SOAPConnectionFactory.newInstance().createConnection();
 		SOAPMessage soapRequest = getSOAPMessage_getCampaignTargetDetails(username, password, campaignTargetId);
 		SOAPMessage soapResponse = soapConnection.call(soapRequest, soapEndpointURL);
-		logger.info("SOAPResponse received. statusCode: " + soapToolsForSAM.getStatusCode(soapResponse) + ", statusDetail: " + soapToolsForSAM.getStatusDetail(soapResponse));
+		logger.info("SOAPResponse received. statusCode: " + SOAPToolsForSAM.getStatusCode(soapResponse) + ", statusDetail: " + SOAPToolsForSAM.getStatusDetail(soapResponse));
 		soapConnection.close();
 		return soapResponse;
 	}
