@@ -12,15 +12,21 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import com.opencsv.CSVReader;
 
+import service.AppBean;
+import util.Config;
+
+//@PropertySource(value = { "classpath:application.properties", "file:./mailchimp.properties" })
 @SpringBootApplication(scanBasePackages={"controllers", "service"})
 public class MailChimpRestProxy {
 	private static Logger logger;
@@ -31,9 +37,25 @@ public class MailChimpRestProxy {
 		logger.info("Starting MailChimpRestProxy ...");
 		ConfigurableApplicationContext context = SpringApplication.run(MailChimpRestProxy.class, args);
 		
+		
+		ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		try {
+			System.out.println("Please enter the version of the MailChimp Rest-Api (e.g. 3.0) ...");
 			String command = br.readLine();
+			final String apiVersion = command;
+			
+			System.out.println("Please enter the api key (you can find it in your MailChimp account settings under Extras/API keys) ...");
+			command = br.readLine();
+			final String apiKey = command;
+			
+			System.out.println("Instantiating the configuration ...");
+			Config config = new Config(apiVersion,apiKey);
+			System.out.println("Config instantiated: " + config.toString());
+			
+			beanFactory.registerSingleton(config.getClass().getCanonicalName(), config);
+			
 			while(!command.equals("exit")) {
 				command=br.readLine();
 			}
@@ -45,6 +67,8 @@ public class MailChimpRestProxy {
 		SpringApplication.exit(context);
 		
 	}
+	
+	
 	
 	@Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -71,5 +95,6 @@ public class MailChimpRestProxy {
             }
         };
     }
+	
 	
 }
