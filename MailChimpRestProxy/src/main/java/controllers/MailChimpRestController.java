@@ -2,6 +2,7 @@ package controllers;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class MailChimpRestController {
 	@Autowired
 	private RestService restService;
+	
+	@RequestMapping(value="/hello", method=RequestMethod.GET)
+	public String hello(HttpServletRequest request) {
+		return "Hello, \nremoteAddr: " + request.getRemoteAddr() + ",\nlocalAddr: " + request.getLocalAddr();
+	}
 	
 	@RequestMapping(value="/createSegment", method=RequestMethod.POST/*,produces = MediaType.APPLICATION_JSON_UTF8_VALUE*/)
 	public JSONObject createSegment(@RequestParam String list_id, @RequestBody SegmentDto segment) throws URISyntaxException {

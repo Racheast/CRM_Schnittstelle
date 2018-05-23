@@ -9,12 +9,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.catalina.filters.RemoteAddrFilter;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
@@ -26,10 +30,15 @@ import com.opencsv.CSVReader;
 import service.AppBean;
 import util.Config;
 
-//@PropertySource(value = { "classpath:application.properties", "file:./mailchimp.properties" })
+@PropertySource(value = { "classpath:application.properties", "file:./configuration.properties" })
 @SpringBootApplication(scanBasePackages={"controllers", "service"})
 public class MailChimpRestProxy {
 	private static Logger logger;
+	
+	@Value("${corsPath}")
+	private String corsPath;
+	@Value("${allowedIpAddress}")
+	private String allowedIpAddress;
 	
 	@Autowired
 	public static void main(String[] args) throws JSONException {
@@ -76,9 +85,10 @@ public class MailChimpRestProxy {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 try {
-                	String filepath = "." + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator +  "corstest.csv";
+                	//for testing
+                	//String filepath = "." + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator +  "corstest.csv";
                 	//String filepath = "." + File.separator + "corstest.csv";
-                	CSVReader reader = new CSVReader(new FileReader(filepath));
+                	CSVReader reader = new CSVReader(new FileReader(corsPath));
                 	List<String[]> lines = reader.readAll();
         			reader.close();
         			for(String[] line : lines) {
@@ -96,5 +106,19 @@ public class MailChimpRestProxy {
         };
     }
 	
+	@Bean
+	public FilterRegistrationBean remoteAddressFilter() {
+
+	    FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+	    RemoteAddrFilter filter = new RemoteAddrFilter();
+	    //filter.setAllow("0:0:0:0:0:0:0:1");
+	    filter.setAllow(allowedIpAddress);
+	    //filter.setDenyStatus(404);   //default deny response http status
+	    filterRegistrationBean.setFilter(filter);
+	    filterRegistrationBean.addUrlPatterns("/*");
+	    
+	    return filterRegistrationBean;
+
+	}
 	
 }
